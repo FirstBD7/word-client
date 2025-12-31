@@ -21,3 +21,27 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# 临时文件
+*.tmp
+*.temp
+*~
+
+# 编译产物
+.nuxt/
+.next/
+.vercel/
+build/
+
+# 测试相关
+coverage/
+.nyc_output/
+
+# 包管理器锁定
+.yarn/
+.pnp.*
+.pnp.js
+
+# 本地配置
+.vscode/settings.json
+*.local
