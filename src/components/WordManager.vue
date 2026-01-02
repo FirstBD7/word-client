@@ -19,16 +19,14 @@
               required
             >
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="wordMeaning">单词释义</label>
             <textarea 
               id="wordMeaning" 
               v-model="newWord.wordMeaning" 
-              placeholder="请输入单词释义" 
               rows="3"
-              required
             ></textarea>
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="wordClassify">单词分类</label>
             <input 
