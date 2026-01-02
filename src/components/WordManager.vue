@@ -2,7 +2,10 @@
   <div class="word-manager">
     <div class="container">
       <header class="header">
-        <h1 class="title">单词管理系统</h1>
+        <div class="header-content">
+          <h1 class="title">单词管理系统</h1>
+          <button @click="logout" class="btn-logout">退出登录</button>
+        </div>
         <p class="subtitle">高效管理您的单词库</p>
       </header>
 
@@ -19,14 +22,16 @@
               required
             >
           </div>
-          <!-- <div class="form-group">
+          <div class="form-group">
             <label for="wordMeaning">单词释义</label>
             <textarea 
               id="wordMeaning" 
               v-model="newWord.wordMeaning" 
+              placeholder="请输入单词释义" 
               rows="3"
+              required
             ></textarea>
-          </div> -->
+          </div>
           <div class="form-group">
             <label for="wordClassify">单词分类</label>
             <input 
@@ -58,7 +63,7 @@
             <button 
               @click="deleteWord(word.wordName)" 
               class="btn btn-danger"
-              :disabled="loading"
+              :disabled="loading || !word.wordName"
             >
               删除
             </button>
@@ -73,7 +78,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { getAllWords, addWord, deleteWord } from '@/api/word'
 
 export default {
   name: 'WordManager',
@@ -85,10 +90,7 @@ export default {
         wordMeaning: '',
         wordClassify: ''
       },
-      loading: false,
-      baseUrl1: 'http://localhost:8081/word/getAll', // 根据实际后端地址修改
-      baseUrl2: 'http://localhost:8081/word/add', // 根据实际后端地址修改
-      baseUrl3: 'http://localhost:8081/word/delete' // 根据实际后端地址修改
+      loading: false
     }
   },
   mounted() {
@@ -98,8 +100,7 @@ export default {
     async fetchWords() {
       this.loading = true
       try {
-        const response = await axios.get(this.baseUrl1)
-        // 适配后端返回的数据格式
+        const response = await getAllWords()
         if (response.data && response.data.success) {
           this.words = response.data.data
         } else {
@@ -118,7 +119,7 @@ export default {
     async addWord() {
       this.loading = true
       try {
-        const response = await axios.post(this.baseUrl2, this.newWord)
+        const response = await addWord(this.newWord)
         if (response.data && response.data.success) {
           this.fetchWords()
           this.newWord = { wordName: '', wordMeaning: '', wordClassify: '' }
@@ -135,10 +136,10 @@ export default {
       }
     },
     async deleteWord(wordName) {
-    //   if (!wordName) {
-    //     alert('无法删除未命名的单词')
-    //     return
-    //   }
+      if (!wordName) {
+        alert('无法删除未命名的单词')
+        return
+      }
       
       if (!confirm(`确定要删除单词 "${wordName}" 吗？`)) {
         return
@@ -146,7 +147,7 @@ export default {
       
       this.loading = true
       try {
-        const response = await axios.delete(`${this.baseUrl3}/${wordName}`)
+        const response = await deleteWord(wordName)
         if (response.data && response.data.success) {
           this.fetchWords()
           alert('单词删除成功')
@@ -160,12 +161,45 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    logout() {
+      if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+/* 原有样式保持不变，添加header-content和btn-logout样式 */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.btn-logout {
+  padding: 8px 16px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+/* 其他原有样式保持不变 */
 .word-manager {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

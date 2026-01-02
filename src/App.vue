@@ -1,17 +1,12 @@
 <template>
   <div id="app">
-    <WordManager />
+    <router-view />
   </div>
 </template>
 
 <script>
-import WordManager from './components/WordManager.vue'
-
 export default {
-  name: 'App',
-  components: {
-    WordManager
-  }
+  name: 'App'
 }
 </script>
 
