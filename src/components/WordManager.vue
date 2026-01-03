@@ -58,13 +58,22 @@
                 <span class="label">分类：</span>{{ word.wordClassify }}
               </p>
             </div>
-            <button 
-              @click="deleteWord(word.wordName)" 
-              class="btn btn-danger"
-              :disabled="loading"
-            >
-              删除
-            </button>
+            <div class="word-actions">
+              <button 
+                @click="addToWordBook(word.wordName)" 
+                class="btn btn-add"
+                :disabled="loading"
+              >
+                添加
+              </button>
+              <button 
+                @click="deleteWord(word.wordName)" 
+                class="btn btn-danger"
+                :disabled="loading"
+              >
+                删除
+              </button>
+            </div>
           </div>
           <div v-if="words.length === 0" class="empty-state">
             <p>暂无单词数据</p>
@@ -97,7 +106,7 @@
 </template>
 
 <script>
-import { getWordList, addWord, deleteWord } from '@/api/word'
+import { getWordList, addWord, deleteWord, addToWordBook } from '@/api/word'
 
 export default {
   name: 'WordManager',
@@ -191,6 +200,28 @@ export default {
       } catch (error) {
         console.error('删除单词失败:', error)
         alert('删除单词失败，请检查后端服务')
+      } finally {
+        this.loading = false
+      }
+    },
+    async addToWordBook(wordName) {
+      if (!wordName) {
+        alert('无法添加未命名的单词')
+        return
+      }
+      
+      this.loading = true
+      try {
+        const response = await addToWordBook(wordName)
+        if (response.data && response.data.success) {
+          alert('单词添加到单词本成功')
+        } else {
+          console.error('添加到单词本失败:', response.data.errMsg)
+          alert('添加到单词本失败: ' + (response.data.errMsg || '未知错误'))
+        }
+      } catch (error) {
+        console.error('添加到单词本失败:', error)
+        alert('添加到单词本失败，请检查后端服务')
       } finally {
         this.loading = false
       }
@@ -473,37 +504,6 @@ export default {
   font-size: 0.85rem;
 }
 
-/* 移动设备响应式调整 */
-@media (max-width: 768px) {
-  .container {
-    padding: 0 10px;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .card {
-    padding: 12px;
-  }
-
-  /* 移动设备上恢复单列布局 */
-  .word-item {
-    flex: 0 0 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .btn-danger {
-    align-self: flex-end;
-  }
-  
-  .pagination {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
 .nav-buttons {
   display: flex;
   gap: 10px;
@@ -527,69 +527,55 @@ export default {
   box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
-/* 其他原有样式保持不变 */
-.word-manager {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.word-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.header {
-  text-align: center;
+.btn-add {
+  background-color: #27ae60;
   color: white;
-  margin-bottom: 20px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+.btn-add:hover {
+  background-color: #2ecc71;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(46, 204, 113, 0.4);
 }
 
-.subtitle {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
+/* 移动设备响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
 
-.card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  margin-bottom: 15px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  .title {
+    font-size: 1.5rem;
+  }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
+  .card {
+    padding: 12px;
+  }
 
-.card-title {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 8px;
-}
+  /* 移动设备上恢复单列布局 */
+  .word-item {
+    flex: 0 0 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 
-.add-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  .word-actions {
+    align-self: flex-end;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .form-group label {

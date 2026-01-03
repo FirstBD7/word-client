@@ -15,11 +15,11 @@ export const getWordBooks = (userName) => {
 }
 
 // 获取单词本详情
-export const getWordBookDetail = (bookName, userId) => {
+export const getWordBookDetail = (bookName, userName) => {
   return axios.get('/wordBook/getAll', {
     params: {
       bookName,
-      userId
+      userName
     }
   })
 }

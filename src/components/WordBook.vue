@@ -12,32 +12,12 @@
         <p class="subtitle">管理您的专属单词本</p>
       </header>
 
-      <!-- 添加单词本卡片 -->
-      <div class="card add-book-card">
-        <h2 class="card-title">添加新单词本</h2>
-        <form @submit.prevent="addWordBook" class="add-form">
-          <div class="form-group">
-            <label for="bookName">单词本名称</label>
-            <input 
-              type="text" 
-              id="bookName" 
-              v-model="newBook.bookName" 
-              placeholder="请输入单词本名称（默认：单词本）" 
-            >
-          </div>
-          <button type="submit" class="btn btn-primary" :disabled="loading">
-            {{ loading ? '创建中...' : '创建单词本' }}
-          </button>
-        </form>
-      </div>
-
       <!-- 单词本列表卡片 -->
       <div class="card book-list-card">
         <h2 class="card-title">我的单词本列表</h2>
         <div v-if="loading" class="loading">加载中...</div>
         <div v-else-if="wordBooks.length === 0" class="empty-state">
           <p>暂无单词本数据</p>
-          <p>点击上方按钮创建您的第一个单词本吧！</p>
         </div>
         <div v-else class="book-list">
           <div 
@@ -99,15 +79,12 @@
 </template>
 
 <script>
-import { addWordBook, getWordBooks, getWordBookDetail } from '@/api/wordBook'
+import { getWordBookDetail } from '@/api/wordBook'
 
 export default {
   name: 'WordBook',
   data() {
     return {
-      newBook: {
-        bookName: ''
-      },
       wordBooks: [],
       loading: false,
       showBookDetail: false,
@@ -120,42 +97,14 @@ export default {
     this.fetchWordBooks()
   },
   methods: {
-    async addWordBook() {
-      this.loading = true
-      try {
-        // 如果用户没有输入名称，使用默认名称
-        const bookData = {
-          bookName: this.newBook.bookName || '单词本',
-          userName: localStorage.getItem('userName')
-        }
-        
-        const response = await addWordBook(bookData)
-        if (response.data && response.data.success) {
-          alert('单词本创建成功')
-          this.newBook.bookName = '' // 清空输入框
-          this.fetchWordBooks() // 刷新列表
-        } else {
-          alert('创建失败: ' + (response.data.errMsg || '未知错误'))
-        }
-      } catch (error) {
-        console.error('创建单词本失败:', error)
-        alert('创建失败，请检查网络连接或服务器状态')
-      } finally {
-        this.loading = false
-      }
-    },
-    
     async fetchWordBooks() {
       this.loading = true
       try {
-        const userName = localStorage.getItem('userName')
-        const response = await getWordBooks(userName)
-        if (response.data && response.data.success) {
-          this.wordBooks = response.data.data || []
-        } else {
-          this.wordBooks = []
-          alert('获取单词本列表失败: ' + (response.data.errMsg || '未知错误'))
-        }
+        // 直接设置默认单词本
+        this.wordBooks = [{
+          bookName: '单词本',
+          wordCount: 0
+        }]
       } catch (error) {
         console.error('获取单词本列表失败:', error)
         this.wordBooks = []
@@ -170,11 +119,12 @@ export default {
       this.showBookDetail = true
       
       try {
-        // 这里假设后端返回的每个单词本都包含userId
-        const userId = localStorage.getItem('userId') || 1 // 临时默认值，实际应该从用户信息中获取
-        const response = await getWordBookDetail(book.bookName, userId)
+        const userName = localStorage.getItem('userName')
+        const response = await getWordBookDetail('单词本', userName)
         if (response.data && response.data.success) {
           this.bookWords = response.data.data || []
+          // 更新单词本的单词数量
+          this.wordBooks[0].wordCount = this.bookWords.length
         } else {
           this.bookWords = []
           alert('获取单词本详情失败: ' + (response.data.errMsg || '未知错误'))
@@ -310,39 +260,6 @@ export default {
   padding-bottom: 10px;
 }
 
-.add-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 500px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: #555;
-  font-size: 0.95rem;
-}
-
-.form-group input {
-  padding: 12px 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
 .btn {
   padding: 12px 25px;
   border: none;
@@ -351,21 +268,6 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .btn-secondary {
