@@ -215,16 +215,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .btn-logout {
-  padding: 8px 16px;
+  padding: 6px 12px;
   background-color: #e74c3c;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -232,87 +232,87 @@ export default {
 
 .btn-logout:hover {
   background-color: #c0392b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
 }
 
 /* 其他原有样式保持不变 */
 .word-manager {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  padding: 10px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
 .header {
   text-align: center;
   color: white;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   opacity: 0.9;
 }
 
 .card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 15px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .card-title {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   color: #333;
-  margin-bottom: 25px;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 8px;
 }
 
 .add-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 
 .form-group label {
   font-weight: 600;
   color: #555;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .form-group input,
 .form-group textarea {
-  padding: 12px 15px;
+  padding: 8px 12px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   transition: border-color 0.3s ease;
 }
 
@@ -320,14 +320,14 @@ export default {
 .form-group textarea:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
 }
 
 .btn {
-  padding: 12px 25px;
+  padding: 8px 18px;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -339,20 +339,21 @@ export default {
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
 }
 
 .btn-danger {
   background-color: #e74c3c;
   color: white;
-  padding: 8px 16px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
 }
 
 .btn-danger:hover {
   background-color: #c0392b;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
 }
 
 .btn:disabled {
@@ -362,27 +363,30 @@ export default {
   box-shadow: none;
 }
 
+/* 修改为两列布局 */
 .word-list {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .word-item {
+  flex: 0 0 calc(50% - 5px); /* 两列布局，减去间距 */
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px;
+  padding: 12px;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.3s ease;
-  border-left: 4px solid #667eea;
+  border-left: 3px solid #667eea;
+  box-sizing: border-box;
 }
 
 .word-item:hover {
   background-color: #e9ecef;
-  transform: translateX(5px);
+  transform: translateY(-2px);
 }
 
 .word-info {
@@ -390,22 +394,22 @@ export default {
 }
 
 .word-name {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #333;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .word-meaning {
   color: #666;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  margin-bottom: 8px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  margin-bottom: 5px;
 }
 
 .word-classify {
   color: #888;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .word-classify .label {
@@ -413,10 +417,11 @@ export default {
 }
 
 .empty-state {
+  flex: 0 0 100%;
   text-align: center;
-  padding: 50px 20px;
+  padding: 30px 20px;
   color: #999;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
 }
 
 /* 分页样式 */
@@ -424,48 +429,51 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  margin-top: 30px;
-  padding-top: 20px;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 10px;
   border-top: 1px solid #f0f0f0;
 }
 
 .btn-pagination {
   background-color: #667eea;
   color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 .btn-pagination:hover:not(:disabled) {
   background-color: #764ba2;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
 }
 
 .page-info {
   color: #666;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
+/* 移动设备响应式调整 */
 @media (max-width: 768px) {
   .container {
-    padding: 0 15px;
+    padding: 0 10px;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .card {
-    padding: 20px;
+    padding: 12px;
   }
 
+  /* 移动设备上恢复单列布局 */
   .word-item {
+    flex: 0 0 100%;
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 10px;
   }
 
   .btn-danger {
@@ -474,7 +482,7 @@ export default {
   
   .pagination {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
   }
 }
 </style>
