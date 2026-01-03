@@ -40,7 +40,7 @@
         <div class="word-list">
           <div 
             v-for="word in words" 
-            :key="word.wordId" 
+            :key="word.wordName" 
             class="word-item"
           >
             <div class="word-info">
@@ -62,13 +62,34 @@
             <p>暂无单词数据</p>
           </div>
         </div>
+        
+        <!-- 分页控件 -->
+        <div v-if="total > 0" class="pagination">
+          <button 
+            @click="prevPage" 
+            class="btn btn-pagination"
+            :disabled="loading || currentPage === 1"
+          >
+            上一页
+          </button>
+          <span class="page-info">
+            第 {{ currentPage }} / {{ totalPages }} 页，共 {{ total }} 条记录
+          </span>
+          <button 
+            @click="nextPage" 
+            class="btn btn-pagination"
+            :disabled="loading || currentPage === totalPages"
+          >
+            下一页
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getAllWords, addWord, deleteWord } from '@/api/word'
+import { getWordList, addWord, deleteWord } from '@/api/word'
 
 export default {
   name: 'WordManager',
@@ -80,7 +101,12 @@ export default {
         wordMeaning: '',
         wordClassify: ''
       },
-      loading: false
+      loading: false,
+      // 分页相关数据
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      totalPages: 0
     }
   },
   mounted() {
@@ -90,11 +116,15 @@ export default {
     async fetchWords() {
       this.loading = true
       try {
-        const response = await getAllWords()
+        const response = await getWordList(this.currentPage, this.pageSize)
         if (response.data && response.data.success) {
-          this.words = response.data.data
+          this.words = response.data.data.items || []
+          this.total = response.data.data.total || 0
+          this.totalPages = Math.ceil(this.total / this.pageSize)
         } else {
           this.words = []
+          this.total = 0
+          this.totalPages = 0
           console.error('获取单词列表失败:', response.data.errMsg)
           alert('获取单词列表失败: ' + (response.data.errMsg || '未知错误'))
         }
@@ -102,6 +132,8 @@ export default {
         console.error('获取单词列表失败:', error)
         alert('获取单词列表失败，请检查后端服务是否正常运行')
         this.words = []
+        this.total = 0
+        this.totalPages = 0
       } finally {
         this.loading = false
       }
@@ -111,6 +143,7 @@ export default {
       try {
         const response = await addWord(this.newWord)
         if (response.data && response.data.success) {
+          // 重新加载当前页数据
           this.fetchWords()
           this.newWord = { wordName: '', wordMeaning: '', wordClassify: '' }
           alert('单词添加成功')
@@ -139,6 +172,7 @@ export default {
       try {
         const response = await deleteWord(wordName)
         if (response.data && response.data.success) {
+          // 重新加载当前页数据
           this.fetchWords()
           alert('单词删除成功')
         } else {
@@ -156,6 +190,19 @@ export default {
       if (confirm('确定要退出登录吗？')) {
         localStorage.removeItem('token')
         this.$router.push('/login')
+      }
+    },
+    // 分页相关方法
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        this.fetchWords()
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+        this.fetchWords()
       }
     }
   }
@@ -319,6 +366,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-bottom: 20px;
 }
 
 .word-item {
@@ -371,6 +419,36 @@ export default {
   font-size: 1.1rem;
 }
 
+/* 分页样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-pagination {
+  background-color: #667eea;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background-color: #764ba2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.page-info {
+  color: #666;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 15px;
@@ -392,6 +470,11 @@ export default {
 
   .btn-danger {
     align-self: flex-end;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 15px;
   }
 }
 </style>
