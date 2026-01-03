@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import WordManager from '@/components/WordManager.vue'
+import WordBook from '@/components/WordBook.vue'  // 导入单词本组件
 
 Vue.use(Router)
 
@@ -23,6 +24,12 @@ const router = new Router({
       path: '/word-manager',
       name: 'WordManager',
       component: WordManager,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/word-book',  // 添加单词本路由
+      name: 'WordBook',
+      component: WordBook,
       meta: { requiresAuth: true }
     }
   ]

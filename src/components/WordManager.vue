@@ -3,8 +3,16 @@
     <div class="container">
       <header class="header">
         <div class="header-content">
-          <h1 class="title">单词管理系统</h1>
-          <button @click="logout" class="btn-logout">退出登录</button>
+          <div class="user-info">
+            <h1 class="title">单词管理系统</h1>
+            <p class="user-name">欢迎，{{ currentUserName }}</p>
+          </div>
+          <div class="nav-buttons">
+            <button @click="$router.push('/word-book')" class="btn btn-secondary">
+              单词本管理
+            </button>
+            <button @click="logout" class="btn btn-logout">退出登录</button>
+          </div>
         </div>
         <p class="subtitle">高效管理您的单词库</p>
       </header>
@@ -106,7 +114,8 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
-      totalPages: 0
+      totalPages: 0,
+      currentUserName: localStorage.getItem('userName') // 获取当前用户名
     }
   },
   mounted() {
@@ -189,6 +198,7 @@ export default {
     logout() {
       if (confirm('确定要退出登录吗？')) {
         localStorage.removeItem('token')
+        localStorage.removeItem('userName')  // 同时清除userName
         this.$router.push('/login')
       }
     },
@@ -390,7 +400,297 @@ export default {
 }
 
 .word-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: -5px;
+  margin-left: 2px;
+}
+
+.word-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.word-meaning {
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  margin-bottom: 5px;
+}
+
+.word-classify {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.word-classify .label {
+  font-weight: 600;
+}
+
+.empty-state {
+  flex: 0 0 100%;
+  text-align: center;
+  padding: 30px 20px;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+/* 分页样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-pagination {
+  background-color: #667eea;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background-color: #764ba2;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+}
+
+.page-info {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* 移动设备响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  /* 移动设备上恢复单列布局 */
+  .word-item {
+    flex: 0 0 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-danger {
+    align-self: flex-end;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* 其他原有样式保持不变 */
+.word-manager {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 修改为两列布局 */
+.word-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.word-item {
+  flex: 0 0 calc(50% - 5px); /* 两列布局，减去间距 */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border-left: 3px solid #667eea;
+  box-sizing: border-box;
+}
+
+.word-item:hover {
+  background-color: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.word-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: -5px;
+  margin-left: 2px;
 }
 
 .word-name {

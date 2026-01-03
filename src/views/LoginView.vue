@@ -75,8 +75,9 @@ export default {
         const response = await login(this.loginForm)
         // 修复：正确访问后端返回的数据格式
         if (response.data && response.data.success && response.data.data) {
-          // 保存token到localStorage
-          localStorage.setItem('token', response.data.data)
+          // 保存token和userName到localStorage
+          localStorage.setItem('token', response.data.data.token)
+          localStorage.setItem('userName', response.data.data.userName)
           // 登录成功，跳转到单词管理页面
           this.$router.push('/word-manager')
         } else {

@@ -23,6 +23,22 @@ axios.interceptors.request.use(
   }
 )
 
+// 在assets/javascript.js或main.js的响应拦截器中
+axios.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    if (error.response && error.response.status === 401) {
+      // token过期或无效，清除本地存储并重定向到登录页
+      localStorage.removeItem('token')
+      localStorage.removeItem('userName')  // 同时清除userName
+      router.push('/login')
+    }
+    return Promise.reject(error)
+  }
+)
+
 // 3. 将axios挂载到Vue原型
 Vue.prototype.$axios = axios
 
