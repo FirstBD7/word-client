@@ -4,7 +4,7 @@ import router from './router'
 import axios from 'axios'
 
 // 配置axios
-axios.defaults.baseURL = 'http://localhost:8081'
+axios.defaults.baseURL = 'http://8.130.106.204:8081'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 // 添加请求拦截器 - 自动添加token

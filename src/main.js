@@ -6,7 +6,7 @@ import axios from 'axios'
 Vue.config.productionTip = false
 
 // 1. 先设置axios默认配置
-axios.defaults.baseURL = 'http://localhost:8081'  // 改为您的后端地址
+axios.defaults.baseURL = 'http://8.130.106.204:8081/'  // 改为您的后端地址
 axios.defaults.withCredentials = true
 
 // 2. 添加请求拦截器
